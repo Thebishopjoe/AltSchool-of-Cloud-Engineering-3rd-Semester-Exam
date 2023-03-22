@@ -6,10 +6,11 @@ pipeline {
         AWS_DEFAULT_REGION = "us-east-1"
     }
     stages {
-        stage("Create exam-nginx-conroller") {
+        stage("Create exam-nginx-controller") {
             steps {
                 script {
                     dir('exam-nginx-controller') {
+                       sh "aws eks --region us-east-1 update-kubeconfig --name demo"
                         sh "terraform init"
                         sh "terraform apply -auto-approve"
                     }
@@ -17,7 +18,7 @@ pipeline {
             }
         }
 
-        stage("Create exam-prometheus") {
+        stage("Create prometheus") {
             steps {
                 script {
                     dir('exam-prometheus') {
@@ -28,13 +29,12 @@ pipeline {
             }
         }
 
-        stage("Deploy exam-voting-app to EKS") {
+        stage("Deploy voting-app to EKS") {
             steps {
                 script {
                     dir('exam-voting-app') {
                         sh "terraform init"
                         sh "terraform apply -auto-approve"
-
                     }
                 }
             }
