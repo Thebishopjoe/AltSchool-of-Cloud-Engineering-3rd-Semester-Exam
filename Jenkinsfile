@@ -55,8 +55,11 @@ pipeline {
             steps {
                 script {
                     dir('exam-ingress-rule') {
-                        sh "terraform init"
-                        sh "terraform apply -auto-approve"
+                        sh "kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.7.1/cert-manager.yaml"
+                        sh "kubectl apply -f prodissuer.yaml"
+                        sh "kubectl apply -f ingress.yaml"
+#                        sh "terraform init"
+#                        sh "terraform apply -auto-approve"
                     }
                 }
             }
