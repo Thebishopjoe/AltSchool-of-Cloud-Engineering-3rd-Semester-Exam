@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: sock-shop
+  name: sock-shop
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: nginx
+ # this should be uncommented if ingress used in "regular" cluster
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - sock-shop.josephadetarami.me
+#    - voting.josephadetarami.me
+    secretName: josephadetarami-tls
+
+  rules:
+  - host: sock-shop.josephadetarami.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+             name: front-end
+             port:
+               number: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vote-front
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: nginx
+#    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+#    - sock-app.josephadetarami.me
+    - voting.josephadetarami.me
+    secretName: josephadetarami-tls
+  rules:
+  - host: voting.josephadetarami.me
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+             name: vote-front
+             port:
+               number: 80
